@@ -1,14 +1,12 @@
 language: php
-
 php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - hhvm
-
+    - 5.4
+    - 5.5
+    - 5.6
 before_script:
-  - composer self-update
-  - composer install --prefer-source --no-interaction --dev
-
+    - composer self-update
+    - composer install --prefer-source --no-interaction --dev
 script: phpunit
+notifications:
+  slack:
+    secure: GDobUSZCGvtaWqbRU3tqSwxa3alHytfOLr7ZR4bZytP4CBoGu3OnQ8hSXYAAKrwGsbDu2dWW/TAlcosllDXgYixzdy4Y5pt3bzHYzT5V8ie165Wz87WKeUYpslCAL90ziy7L7zO6MxkOqjbRdVgugP6nf5z2LZ9+cKzjAVEHCmFelTQ1jf0AwIaMXdgDZglUM1lebaZ/NYbqUPYNmdkya0PB3p/ueklkz8t7IVVyJOmXJ/FA+dBT1BWFl+Mt2zusPXY4igpxzuQNTOvnNcSASKY+fIZIIKohVKErBLD7IFxeg3at6ds4xAcQlLS9no+vaa9x5zIhcZvzDJjb7QxcItfaq7DkcVmlSBWcbO0F7AEfudAO9dFzNndrw4maUPWo4wodFOFf3Uwau8fVsllzftQReks+ayGllffk9DOcwMFW10t4nB3hiBVCWI17VyxtD59FuYhNjP+LBXx8pOjdK089oVa5sugUCd7dMrcRf7KVQhiL4WBqZEB6+OpBnSSaDwBzPL3S2TtnHDAtvHZF1cgU0F6mzJ2r7XEzUL+0MQlkj3RVC3smcs1G/5CQQvMczCisxWtUcvrdubWqzi5udU+Dax06eN7QqaLNq6wuiAxf/5T8DJzq/5Xzwj89slqOOc7U3WrcV0uLwRv5teAEZorL1+LImCxBqLR474kI9zM=

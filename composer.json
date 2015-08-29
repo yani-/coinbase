@@ -1,0 +1,23 @@
+{
+    "name": "yani-/coinbase",
+    "description": "A simple Laravel 4 package for processing bitcoin payments via Coinbase",
+    "keywords": ["laravel", "coinbase"],
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Yani Iliev",
+            "email": "yani@iliev.me"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.*",
+        "guzzlehttp/guzzle": "~4.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Yani\\Coinbase\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}

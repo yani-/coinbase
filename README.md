@@ -17,7 +17,7 @@ A simple Laravel package for processing payments via [Coinbase](https://coinbase
 You can install the package using the [Composer](https://getcomposer.org/) package manager. Assuming you have Composer installed globally:
 
 ```sh
-composer require yani-/coinbase:0.*
+composer require yani/coinbase:0.*
 ```
 
 ### Service provider and alias

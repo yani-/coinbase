@@ -1,5 +1,6 @@
 # Coinbase
 [![Build Status](https://travis-ci.org/yani-/coinbase.png?branch=develop)](https://travis-ci.org/yani-/coinbase)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yani-/coinbase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yani-/coinbase/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/yani/coinbase/v/stable.png)](https://packagist.org/packages/yani/coinbase)
 [![Total Downloads](https://poser.pugx.org/yani/coinbase/downloads.png)](https://packagist.org/packages/yani/coinbase)
 

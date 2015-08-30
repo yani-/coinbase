@@ -1,4 +1,4 @@
-<?php
+<?php namespace Yani\Coinbase\Tests;
 
 use Yani\Coinbase\Facades\Coinbase;
 
@@ -13,9 +13,9 @@ final class TestCoinbase extends Coinbase {
 	{
 		return $this->getFacadeAccessor();
 	}
-};
+}
 
-class TestCoinbaseFacede extends PHPUnit_Framework_TestCase {
+class TestCoinbaseFacede extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * Test getFacadeAccessor

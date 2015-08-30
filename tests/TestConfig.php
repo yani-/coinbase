@@ -1,6 +1,6 @@
-<?php
+<?php namespace Yani\Coinbase\Tests;
 
-class TestConfig extends PHPUnit_Framework_TestCase {
+class TestConfig extends \PHPUnit_Framework_TestCase {
 	/**
 	 * Coinbase package config
 	 *

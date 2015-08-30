@@ -1,10 +1,10 @@
-<?php
+<?php namespace Yani\Coinbase\Tests;
 
 use GuzzleHttp\Client as Guzzle;
 use Yani\Coinbase\CoinbaseClient;
 use Yani\Coinbase\CoinbaseServiceProvider;
 
-class TestCoinbaseServiceProvider extends PHPUnit_Framework_TestCase {
+class TestCoinbaseServiceProvider extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * Test if the class can be instantiated
@@ -19,7 +19,7 @@ class TestCoinbaseServiceProvider extends PHPUnit_Framework_TestCase {
 	 */
 	public function testBoot()
 	{
-		$mock = Mockery::mock('Yani\Coinbase\CoinbaseServiceProvider[package]', array(array()))
+		$mock = \Mockery::mock('Yani\Coinbase\CoinbaseServiceProvider[package]', array(array()))
 			->shouldReceive('package')->with('yani/coinbase')->andReturn('')->mock();
 		$mock->boot();
 	}
@@ -30,9 +30,9 @@ class TestCoinbaseServiceProvider extends PHPUnit_Framework_TestCase {
 	public function testRegister()
 	{
 		$endpoint = 'https://api.sandbox.coinbase.com';
-		$appMock = Mockery::mock('ArrayIterator')->shouldReceive('share')->mock();
+		$appMock = \Mockery::mock('ArrayIterator')->shouldReceive('share')->mock();
 
-		$appMockConfig = Mockery::mock('config')
+		$appMockConfig = \Mockery::mock('config')
 			->shouldReceive('get')
 			->with('coinbase::endpoint')
 			->andReturn($endpoint)
@@ -61,15 +61,18 @@ class TestCoinbaseServiceProvider extends PHPUnit_Framework_TestCase {
 	 */
 	protected function mockArrayIterator(\Mockery\MockInterface $mock, array $items)
 	{
-		if ($mock instanceof \ArrayAccess) {
-			foreach ($items as $key => $val) {
+		if ($mock instanceof \ArrayAccess)
+		{
+			foreach ($items as $key => $val)
+			{
 				$mock->shouldReceive('offsetGet')->with($key)->andReturn($val);
 				$mock->shouldReceive('offsetExists')->with($key)->andReturn(true);
 				$mock->shouldReceive('offsetSet')->with($key, $val);
 			}
 			$mock->shouldReceive('offsetExists')->andReturn(false);
 		}
-		if ($mock instanceof \Iterator) {
+		if ($mock instanceof \Iterator)
+		{
 			$counter = 0;
 			$mock->shouldReceive('rewind')->andReturnUsing(function () use (& $counter) {
 				$counter = 0;
@@ -89,7 +92,8 @@ class TestCoinbaseServiceProvider extends PHPUnit_Framework_TestCase {
 				++$counter;
 			});
 		}
-		if ($mock instanceof \Countable) {
+		if ($mock instanceof \Countable)
+		{
 			$mock->shouldReceive('count')->andReturn(count($items));
 		}
 	}

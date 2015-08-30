@@ -1,10 +1,10 @@
-<?php
+<?php namespace Yani\Coinbase\Tests;
 
 use GuzzleHttp\Client as Guzzle;
 use Yani\Coinbase\CoinbaseClient;
 use Yani\Coinbase\Exceptions\CoinbaseOrderException;
 
-class TestCoinbaseClient extends PHPUnit_Framework_TestCase {
+class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 	/**
 	 * Coinbase client
 	 *
@@ -80,7 +80,7 @@ class TestCoinbaseClient extends PHPUnit_Framework_TestCase {
 	 */
 	public function setUp()
 	{
-		$this->guzzleMock = Mockery::mock('GuzzleHttp\Client');
+		$this->guzzleMock = \Mockery::mock('GuzzleHttp\Client');
 		$this->client     = new CoinbaseClient($this->guzzleMock, $this->endpoint);
 
 		$this->amount      = 10;
@@ -116,7 +116,7 @@ class TestCoinbaseClient extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCreateOrder()
 	{
-		$successfulOrderResponseMock = Mockery::mock('successfulOrderResponseMock')
+		$successfulOrderResponseMock = \Mockery::mock('successfulOrderResponseMock')
 			->shouldReceive('getStatusCode')->andReturn(201)
 			->shouldReceive('getBody')->andReturn($this->orderData)->mock();
 
@@ -136,7 +136,7 @@ class TestCoinbaseClient extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCreateOrderFailed()
 	{
-		$failedOrderResponseMock = Mockery::mock('failedOrderResponseMock')
+		$failedOrderResponseMock = \Mockery::mock('failedOrderResponseMock')
 			->shouldReceive('getStatusCode')->andReturn(500)
 			->shouldReceive('getBody')->andReturn('some error from Coinbase')->mock();
 

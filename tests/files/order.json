@@ -1,0 +1,37 @@
+{
+  "data": {
+    "id": "0fdfb26e-bd26-5e1c-b055-7b935e57fa33",
+    "code": "66BEOV2A",
+    "status": "active",
+    "type": "order",
+    "name": "Order #123",
+    "description": "Sample order",
+    "amount": {
+      "amount": "10.00",
+      "currency": "USD"
+    },
+    "payout_amount": null,
+    "bitcoin_address": "mymZkiXhQNd6VWWG7VGSVdDX9bKmviti3U",
+    "bitcoin_amount": {
+      "amount": "1.00000000",
+      "currency": "BTC"
+    },
+    "bitcoin_uri": "bitcoin:mrNo5ntJfWP8BGjR2MkAxEgoE8NDu4CM3g?amount=1.00&r=https://www.coinbase.com/r/555b9570a54d75860e00041d",
+    "receipt_url": "https://www.coinbase.com/orders/d5d3e516dae19ca5b444fe56405ee917/receipt",
+    "expires_at": "2015-01-31T13:09:02-08:00",
+    "mispaid_at": null,
+    "paid_at": null,
+    "refund_address": null,
+    "transaction": null,
+    "refunds": [],
+    "mispayments": [],
+    "metadata": {
+      "customer_id": "id_1005",
+      "customer_name": "Satoshi Nakamoto"
+    },
+    "created_at": "2015-01-31T20:49:02Z",
+    "updated_at": "2015-01-31T20:49:02Z",
+    "resource": "order",
+    "resource_path": "/v2/orders/0fdfb26e-bd26-5e1c-b055-7b935e57fa33"
+  }
+}

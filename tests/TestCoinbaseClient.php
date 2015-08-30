@@ -20,6 +20,20 @@ class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 	protected $endpoint = 'https://api.sandbox.coinbase.com';
 
 	/**
+	 * Coinbase apiKey
+	 *
+	 * @var string
+	 */
+	protected $apiKey = 'COINBASE-API-KEY';
+
+	/**
+	 * Coinbase apiSecret
+	 *
+	 * @var string
+	 */
+	protected $apiSecret = 'COINBASE-API-SECRET';
+
+	/**
 	 * GuzzleMock object
 	 *
 	 * @var mixed
@@ -81,7 +95,7 @@ class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 	public function setUp()
 	{
 		$this->guzzleMock = \Mockery::mock('GuzzleHttp\Client');
-		$this->client     = new CoinbaseClient($this->guzzleMock, $this->endpoint);
+		$this->client     = new CoinbaseClient($this->guzzleMock, $this->apiKey, $this->apiSecret, $this->endpoint);
 
 		$this->amount      = 10;
 		$this->currency    = 'USD';
@@ -89,15 +103,13 @@ class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 		$this->description = '';
 		$this->metadata    = array();
 
-		$this->payload = array(
-			'body' => json_encode(array(
-				'amount'      => $this->amount,
-				'currency'    => $this->currency,
-				'name'        => $this->name,
-				'description' => $this->description,
-				'metadata'    => $this->metadata,
-			))
-		);
+		$this->payload = json_encode(array(
+			'amount'      => $this->amount,
+			'currency'    => $this->currency,
+			'name'        => $this->name,
+			'description' => $this->description,
+			'metadata'    => $this->metadata,
+		));
 
 		$this->orderData = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'order.json');
 		$this->orderData = json_decode($this->orderData);
@@ -116,17 +128,35 @@ class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testCreateOrder()
 	{
+		$timestamp = time();
+		$accessSign = hash_hmac(
+			'sha256',
+			($timestamp . 'POST' . '/v2/orders' . $this->payload),
+			$this->apiSecret
+		);
+
+		$headers = array(
+			'CB-ACCESS-KEY'       => $this->apiKey,
+			'CB-ACCESS-SIGN'      => $accessSign,
+			'CB-ACCESS-TIMESTAMP' => $timestamp,
+		);
 		$successfulOrderResponseMock = \Mockery::mock('successfulOrderResponseMock')
 			->shouldReceive('getStatusCode')->andReturn(201)
 			->shouldReceive('getBody')->andReturn($this->orderData)->mock();
 
 		$this->guzzleMock
 			->shouldReceive('post')
-			->with($this->endpoint, $this->payload)
-			->andReturn($successfulOrderResponseMock);
+			->with($this->endpoint . '/v2/orders', array(
+				'body'    => $this->payload,
+				'headers' => $headers,
+			))->andReturn($successfulOrderResponseMock);
 
-		$this->client = new CoinbaseClient($this->guzzleMock, $this->endpoint);
-		$order = $this->client->createOrder($this->amount, $this->currency, $this->name);
+		$clientMock = \Mockery::mock(
+			'Yani\Coinbase\CoinbaseClient[getHeaders]',
+			array($this->guzzleMock, $this->apiKey, $this->apiSecret, $this->endpoint)
+		)->shouldReceive('getHeaders')->andReturn($headers)->mock();
+
+		$order = $clientMock->createOrder($this->amount, $this->currency, $this->name);
 
 		$this->assertEquals($order, $this->orderData->data);
 	}
@@ -136,18 +166,61 @@ class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testCreateOrderFailed()
 	{
-		$failedOrderResponseMock = \Mockery::mock('failedOrderResponseMock')
+		$timestamp = time();
+		$accessSign = hash_hmac(
+			'sha256',
+			($timestamp . 'POST' . '/v2/orders' . $this->payload),
+			$this->apiSecret
+		);
+
+		$headers = array(
+			'CB-ACCESS-KEY'       => $this->apiKey,
+			'CB-ACCESS-SIGN'      => $accessSign,
+			'CB-ACCESS-TIMESTAMP' => $timestamp,
+		);
+
+		$failedOrderResponseMock = \Mockery::mock('successfulOrderResponseMock')
 			->shouldReceive('getStatusCode')->andReturn(500)
-			->shouldReceive('getBody')->andReturn('some error from Coinbase')->mock();
+			->shouldReceive('getBody')->andReturn('some error from coinbase')->mock();
 
 		$this->guzzleMock
 			->shouldReceive('post')
-			->with($this->endpoint, $this->payload)
-			->andReturn($failedOrderResponseMock);
+			->with($this->endpoint . '/v2/orders', array(
+				'body'    => $this->payload,
+				'headers' => $headers
+			))->andReturn($failedOrderResponseMock);
+
+		$clientMock = \Mockery::mock(
+			'Yani\Coinbase\CoinbaseClient[getHeaders]',
+			array($this->guzzleMock, $this->apiKey, $this->apiSecret, $this->endpoint)
+		)->shouldReceive('getHeaders')->andReturn($headers)->mock();
 
 		$this->setExpectedException('Yani\Coinbase\Exceptions\CoinbaseOrderException');
 
-		$order = $this->client->createOrder($this->amount, $this->currency, $this->name);
+		$order = $clientMock->createOrder($this->amount, $this->currency, $this->name);
+	}
+
+	/**
+	 * Test getHeaders method
+	 */
+	public function testGetHeaders()
+	{
+		$timestamp   = time();
+		$method      = 'POST';
+		$requestPath = '/v2/orders';
+		$body        = $this->payload;
+
+		$headers = $this->client->getHeaders($timestamp, $method, $requestPath, $body);
+
+		$accessSign = hash_hmac('sha256', ($timestamp . $method . $requestPath . $body), $this->apiSecret);
+
+		$expectedHeaders = array(
+			'CB-ACCESS-KEY'       => $this->apiKey,
+			'CB-ACCESS-SIGN'      => $accessSign,
+			'CB-ACCESS-TIMESTAMP' => $timestamp,
+		);
+
+		$this->assertEquals($headers, $expectedHeaders);
 	}
 
 }

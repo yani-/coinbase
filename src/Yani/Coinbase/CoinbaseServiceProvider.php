@@ -30,7 +30,12 @@ class CoinbaseServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app['coinbase'] = $this->app->share(function ($app) {
-			return new CoinbaseClient(new Guzzle, $app['config']->get('coinbase::endpoint'));
+			return new CoinbaseClient(
+				new Guzzle,
+				$app['config']->get('coinbase::apiKey'),
+				$app['config']->get('coinbase::apiSecret'),
+				$app['config']->get('coinbase::endpoint')
+			);
 		});
 	}
 

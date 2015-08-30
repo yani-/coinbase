@@ -6,6 +6,20 @@ use GuzzleHttp\Client as Guzzle;
 class CoinbaseClient {
 
 	/**
+	 * The coinbase API KEY
+	 *
+	 * @var string
+	 */
+	protected $apiKey;
+
+	/**
+	 * The coinbase API SECRET
+	 *
+	 * @var string
+	 */
+	protected $apiSecret;
+
+	/**
 	 * The Guzzle HTTP client
 	 *
 	 * @var \GuzzleHttp\Client
@@ -23,12 +37,16 @@ class CoinbaseClient {
 	 * Instantiate a new client
 	 *
 	 * @param \GuzzleHttp\Client $client
+	 * @param string             $apiKey
+	 * @param string             $apiSecret
 	 * @param string             $endpoint
 	 */
-	public function __construct(Guzzle $client, $endpoint)
+	public function __construct(Guzzle $client, $apiKey, $apiSecret, $endpoint)
 	{
-		$this->client   = $client;
-		$this->endpoint = $endpoint;
+		$this->apiKey    = $apiKey;
+		$this->apiSecret = $apiSecret;
+		$this->client    = $client;
+		$this->endpoint  = $endpoint;
 	}
 
 	/**
@@ -44,9 +62,15 @@ class CoinbaseClient {
 	 */
 	public function createOrder($amount, $currency, $name, $description = '', $metadata = array())
 	{
-		$payload = $this->preparePayload(get_defined_vars());
-		$response = $this->client->post($this->endpoint, $payload);
-		if ((int)$response->getStatusCode() === 201)
+		$payload = json_encode(get_defined_vars());
+		$path    = '/v2/orders';
+		$headers = $this->getHeaders(time(), 'POST', $path, $payload);
+
+		$response = $this->client->post($this->endpoint . $path, array(
+			'body'    => $payload,
+			'headers' => $headers
+		));
+		if ((int) $response->getStatusCode() === 201)
 		{
 			return $response->getBody()->data;
 		}
@@ -58,16 +82,23 @@ class CoinbaseClient {
 	}
 
 	/**
-	 * Prepare payload data by json encoding it
+	 * Return headers with coinbase signature
 	 *
-	 * @param array $data
+	 * @param int    $timestamp
+	 * @param string $method
+	 * @param string $requestPath
+	 * @param array  $body
 	 *
 	 * @return array
 	 */
-	private function preparePayload($data)
+	public function getHeaders($timestamp, $method, $requestPath, $body)
 	{
+		$accessSign = hash_hmac('sha256', ($timestamp . $method . $requestPath . $body), $this->apiSecret);
+
 		return array(
-			'body' => json_encode($data)
+			'CB-ACCESS-KEY'       => $this->apiKey,
+			'CB-ACCESS-SIGN'      => $accessSign,
+			'CB-ACCESS-TIMESTAMP' => $timestamp,
 		);
 	}
 }

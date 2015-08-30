@@ -4,12 +4,12 @@ return array(
 	/**
 	 * Coinbase API KEY
 	 */
-	'api_key' => '',
+	'apiKey' => '',
 
 	/**
 	 * Coinbase API SECRET
 	 */
-	'api_secret' => '',
+	'apiSecret' => '',
 
 	/**
 	 * Coinbase Endpoint

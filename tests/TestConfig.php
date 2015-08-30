@@ -22,8 +22,8 @@ class TestConfig extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testConfigHasApiKey()
 	{
-		$this->assertTrue(isset($this->config['api_key']));
-		$this->assertTrue(empty($this->config['api_key']));
+		$this->assertTrue(isset($this->config['apiKey']));
+		$this->assertTrue(empty($this->config['apiKey']));
 	}
 
 	/**
@@ -31,8 +31,8 @@ class TestConfig extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testConfigHasApiSecret()
 	{
-		$this->assertTrue(isset($this->config['api_secret']));
-		$this->assertTrue(empty($this->config['api_secret']));
+		$this->assertTrue(isset($this->config['apiSecret']));
+		$this->assertTrue(empty($this->config['apiSecret']));
 	}
 
 	/**

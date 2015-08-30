@@ -1,4 +1,8 @@
 # Coinbase
+[![Build Status](https://travis-ci.org/yani-/coinbase.png?branch=develop)](https://travis-ci.org/yani-/coinbase)
+[![Latest Stable Version](https://poser.pugx.org/yani/coinbase/v/stable.png)](https://packagist.org/packages/yani/coinbase)
+[![Total Downloads](https://poser.pugx.org/yani/coinbase/downloads.png)](https://packagist.org/packages/yani/coinbase)
+
 
 A simple Laravel package for processing payments via [Coinbase](https://coinbase.com)
 
@@ -67,3 +71,6 @@ catch (CoinbaseOrderException $e)
 	echo "The order failed because: " . $e->getMessage();
 }
 ```
+
+### License
+MIT

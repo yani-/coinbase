@@ -46,7 +46,7 @@ class CoinbaseClient {
 	{
 		$payload = $this->preparePayload(get_defined_vars());
 		$response = $this->client->post($this->endpoint, $payload);
-		if (int($response->getStatusCode()) === 201)
+		if ((int)$response->getStatusCode() === 201)
 		{
 			return $response->getBody()->data;
 		}

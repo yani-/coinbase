@@ -7,6 +7,11 @@ return array(
 	'api_key' => '',
 
 	/**
+	 * Coinbase API SECRET
+	 */
+	'api_secret' => '',
+
+	/**
 	 * Coinbase Endpoint
 	 *
 	 * sandbox:    https://api.sandbox.coinbase.com

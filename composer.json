@@ -1,5 +1,5 @@
 {
-    "name": "yani-/coinbase",
+    "name": "yani/coinbase",
     "description": "A simple Laravel 4 package for processing bitcoin payments via Coinbase",
     "keywords": ["laravel", "coinbase"],
     "license": "BSD-2-Clause",

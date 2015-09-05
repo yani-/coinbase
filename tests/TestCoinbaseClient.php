@@ -2,7 +2,7 @@
 
 use GuzzleHttp\Client as Guzzle;
 use Yani\Coinbase\CoinbaseClient;
-use Yani\Coinbase\Exceptions\CoinbaseOrderException;
+use Yani\Coinbase\Exceptions\CoinbaseCheckoutException;
 
 class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 	/**
@@ -217,7 +217,7 @@ class TestCoinbaseClient extends \PHPUnit_Framework_TestCase {
 			array($this->guzzleMock, $this->apiKey, $this->apiSecret, $this->endpoint)
 		)->shouldReceive('getHeaders')->andReturn($headers)->mock();
 
-		$this->setExpectedException('Yani\Coinbase\Exceptions\CoinbaseOrderException');
+		$this->setExpectedException('Yani\Coinbase\Exceptions\CoinbaseCheckoutException');
 
 		$order = $clientMock->createCheckout($this->amount, $this->currency, $this->name, $data);
 	}

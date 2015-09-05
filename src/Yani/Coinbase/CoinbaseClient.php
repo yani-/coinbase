@@ -1,6 +1,6 @@
 <?php namespace Yani\Coinbase;
 
-use Yani\Coinbase\Exceptions\CoinbaseOrderException;
+use Yani\Coinbase\Exceptions\CoinbaseCheckoutException;
 use GuzzleHttp\Client as Guzzle;
 
 class CoinbaseClient {
@@ -93,7 +93,7 @@ class CoinbaseClient {
 		}
 		else
 		{
-			throw new CoinbaseOrderException($response->getBody());
+			throw new CoinbaseCheckoutException($response->getBody());
 		}
 
 	}

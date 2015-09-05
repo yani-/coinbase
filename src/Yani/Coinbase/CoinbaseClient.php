@@ -60,19 +60,36 @@ class CoinbaseClient {
 	 *
 	 * @return stdClass
 	 */
-	public function createOrder($amount, $currency, $name, $description = '', $metadata = array())
+	public function createCheckout($amount, $currency, $name, $data = array())
 	{
-		$payload = json_encode(get_defined_vars());
-		$path    = '/v2/orders';
+		$payload = array(
+			'amount' => $amount,
+			'currency' => $currency,
+			'name'     => $name,
+		);
+		foreach ($data as $key => $value)
+		{
+			$payload[$key] = $value;
+		}
+		$payload = json_encode($payload);
+		$path    = '/v2/checkouts';
 		$headers = $this->getHeaders(time(), 'POST', $path, $payload);
 
-		$response = $this->client->post($this->endpoint . $path, array(
-			'body'    => $payload,
-			'headers' => $headers
-		));
+		try
+		{
+			$response = $this->client->post($this->endpoint . $path, array(
+				'body'    => $payload,
+				'headers' => $headers
+			));
+		}
+		catch (\Exception $e)
+		{
+			echo $e->getResponse();
+			exit(0);
+		}
 		if ((int) $response->getStatusCode() === 201)
 		{
-			return $response->getBody()->data;
+			return json_decode($response->getBody())->data;
 		}
 		else
 		{
@@ -99,6 +116,7 @@ class CoinbaseClient {
 			'CB-ACCESS-KEY'       => $this->apiKey,
 			'CB-ACCESS-SIGN'      => $accessSign,
 			'CB-ACCESS-TIMESTAMP' => $timestamp,
+			'CB-VERSION'          => '2015-04-08',
 		);
 	}
 }

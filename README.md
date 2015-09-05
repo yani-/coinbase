@@ -58,16 +58,12 @@ $currency = 'USD';
 $name     = 'Order #1';
 try
 {
-	$order = Coinbase::createOrder($amount, $currency, $name);
-	echo $order->id;                       // 0fdfb26e-bd26-5e1c-b055-7b935e57fa33
-	echo $order->status;                   // active
-	echo $order->bitcoin_address;          // mymZkiXhQNd6VWWG7VGSVdDX9bKmviti3U
-	echo $order->bitcoin_amount->amount;   // 1.00000000
-	echo $order->bitcoin_amount->currency; // BTC
-	echo $order->expires_at;               // expires_at
-	// You can find a full list of the response here: https://developers.coinbase.com/api/v2#create-an-order
+	$checkout = Coinbase::createCheckout($amount, $currency, $name);
+	echo $checkout->id;         // ffc93ba1-874d-5c55-853c-53c9c4814b1e
+	echo $checkout->embed_code; // af0b52802ad7b36806e307b2d294e3b4
+	// You can find a full list of the response here: https://developers.coinbase.com/api/v2#create-checkout
 }
-catch (CoinbaseOrderException $e)
+catch (CoinbaseCheckoutException $e)
 {
 	echo "The order failed because: " . $e->getMessage();
 }

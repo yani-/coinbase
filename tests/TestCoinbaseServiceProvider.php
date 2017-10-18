@@ -11,7 +11,7 @@ class TestCoinbaseServiceProvider extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testCanbeInstantiated()
 	{
-		$this->assertInstanceOf('Yani\Coinbase\CoinbaseServiceProvider', new CoinbaseServiceProvider(array()));
+		$this->assertInstanceOf('Yani\Coinbase\CoinbaseServiceProvider', new CoinbaseServiceProvider([]));
 	}
 
 	/**
@@ -19,9 +19,30 @@ class TestCoinbaseServiceProvider extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testBoot()
 	{
-		$mock = \Mockery::mock('Yani\Coinbase\CoinbaseServiceProvider[package]', array(array()))
-			->shouldReceive('package')->with('yani/coinbase')->andReturn('')->mock();
-		$mock->boot();
+		$endpoint = 'https://api.sandbox.coinbase.com';
+
+		$config = \Mockery::mock();
+		$appMock = \Mockery::mock(\ArrayAccess::class);
+		$appMock->shouldReceive('singleton');
+		$appMock->shouldReceive('offsetGet')->zeroOrMoreTimes()->with('path.config')->andReturn('/some/config/path');
+		$appMock->shouldReceive('offsetGet')->zeroOrMoreTimes()->with('config')->andReturn($config);
+		$config->shouldReceive('get')->withAnyArgs()->once()->andReturn([]);
+		$config->shouldReceive('set')->withAnyArgs()->once()->andReturnUndefined();
+		$appMock->shouldReceive('bind')->withAnyArgs()->twice()->andReturnUndefined();
+
+		$appMockConfig = \Mockery::mock('config')
+			->shouldReceive('get')
+			->with('coinbase.endpoint')
+			->andReturn($endpoint)
+			->mock();
+
+		$this->mockArrayIterator($appMock, [
+			'config'   => $appMockConfig,
+			'coinbase' => null,
+		]);
+
+		$coinbaseServiceProvider = new CoinbaseServiceProvider($appMock);
+		$coinbaseServiceProvider->boot();
 	}
 
 	/**
@@ -30,18 +51,26 @@ class TestCoinbaseServiceProvider extends \PHPUnit_Framework_TestCase {
 	public function testRegister()
 	{
 		$endpoint = 'https://api.sandbox.coinbase.com';
-		$appMock = \Mockery::mock('ArrayIterator')->shouldReceive('share')->mock();
+
+		$config = \Mockery::mock();
+		$appMock = \Mockery::mock(\ArrayAccess::class);
+		$appMock->shouldReceive('singleton');
+		$appMock->shouldReceive('offsetGet')->zeroOrMoreTimes()->with('path.config')->andReturn('/some/config/path');
+		$appMock->shouldReceive('offsetGet')->zeroOrMoreTimes()->with('config')->andReturn($config);
+		$config->shouldReceive('get')->withAnyArgs()->once()->andReturn([]);
+		$config->shouldReceive('set')->withAnyArgs()->once()->andReturnUndefined();
+		$appMock->shouldReceive('bind')->withAnyArgs()->twice()->andReturnUndefined();
 
 		$appMockConfig = \Mockery::mock('config')
 			->shouldReceive('get')
-			->with('coinbase::endpoint')
+			->with('coinbase.endpoint')
 			->andReturn($endpoint)
 			->mock();
 
-		$this->mockArrayIterator($appMock, array(
+		$this->mockArrayIterator($appMock, [
 			'config'   => $appMockConfig,
 			'coinbase' => null,
-		));
+		]);
 
 		$coinbaseServiceProvider = new CoinbaseServiceProvider($appMock);
 		$coinbaseServiceProvider->register();
@@ -52,8 +81,8 @@ class TestCoinbaseServiceProvider extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testProvides()
 	{
-		$coinbaseServiceProvider = new CoinbaseServiceProvider(array());
-		$this->assertEquals($coinbaseServiceProvider->provides(), array('coinbase'));
+		$coinbaseServiceProvider = new CoinbaseServiceProvider([]);
+		$this->assertEquals($coinbaseServiceProvider->provides(), ['coinbase']);
 	}
 
 	/**

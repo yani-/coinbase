@@ -19,7 +19,8 @@ class CoinbaseServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('yani/coinbase');
+		$config_path = $this->app['path.config'] . DIRECTORY_SEPARATOR . 'coinbase.php';
+		$this->publishes([__DIR__ . '/../../config/config.php' => $config_path]);
 	}
 
 	/**
@@ -29,12 +30,14 @@ class CoinbaseServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app['coinbase'] = $this->app->share(function ($app) {
+		$this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'coinbase');
+
+		$this->app->singleton('coinbase', function ($app) {
 			return new CoinbaseClient(
 				new Guzzle,
-				$app['config']->get('coinbase::apiKey'),
-				$app['config']->get('coinbase::apiSecret'),
-				$app['config']->get('coinbase::endpoint')
+				$app['config']->get('coinbase.apiKey'),
+				$app['config']->get('coinbase.apiSecret'),
+				$app['config']->get('coinbase.endpoint')
 			);
 		});
 	}
@@ -46,6 +49,6 @@ class CoinbaseServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('coinbase');
+		return ['coinbase'];
 	}
 }

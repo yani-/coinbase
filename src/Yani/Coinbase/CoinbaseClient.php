@@ -60,13 +60,13 @@ class CoinbaseClient {
 	 *
 	 * @return stdClass
 	 */
-	public function createCheckout($amount, $currency, $name, $data = array())
+	public function createCheckout($amount, $currency, $name, $data = [])
 	{
-		$payload = array(
+		$payload = [
 			'amount' => $amount,
 			'currency' => $currency,
 			'name'     => $name,
-		);
+		];
 		foreach ($data as $key => $value)
 		{
 			$payload[$key] = $value;
@@ -77,10 +77,10 @@ class CoinbaseClient {
 
 		try
 		{
-			$response = $this->client->post($this->endpoint . $path, array(
+			$response = $this->client->post($this->endpoint . $path, [
 				'body'    => $payload,
 				'headers' => $headers
-			));
+			]);
 		}
 		catch (\Exception $e)
 		{
@@ -112,11 +112,11 @@ class CoinbaseClient {
 	{
 		$accessSign = hash_hmac('sha256', ($timestamp . $method . $requestPath . $body), $this->apiSecret);
 
-		return array(
+		return [
 			'CB-ACCESS-KEY'       => $this->apiKey,
 			'CB-ACCESS-SIGN'      => $accessSign,
 			'CB-ACCESS-TIMESTAMP' => $timestamp,
 			'CB-VERSION'          => '2015-04-08',
-		);
+		];
 	}
 }

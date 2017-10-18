@@ -6,7 +6,7 @@ class TestConfig extends \PHPUnit_Framework_TestCase {
 	 *
 	 * @var array
 	 */
-	protected $config = array();
+	protected $config = [];
 
 	/**
 	 * Setting up the tests

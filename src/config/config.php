@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 	/**
 	 * Coinbase API KEY
 	 */
@@ -18,4 +18,4 @@ return array(
 	 * production: https://api.coinbase.com
 	 */
 	'endpoint' => '',
-);
+];
